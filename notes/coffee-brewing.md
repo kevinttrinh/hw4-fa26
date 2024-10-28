@@ -1,4 +1,8 @@
-# Coffee Brewing Notes
+---
+title: Coffee Brewing Notes
+date: 2024-10-30
+category: personal
+---
 
 Ongoing experiments with pour-over technique.
 

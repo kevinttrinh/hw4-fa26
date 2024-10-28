@@ -22,6 +22,22 @@ python -m hunch.build
 
 Open `output/index.html` in a browser to see your notes.
 
+## Notes format
+
+Notes can include an optional YAML frontmatter block:
+
+```markdown
+---
+title: My Note
+date: 2024-10-28
+category: python
+---
+
+Note body here.
+```
+
+Supported fields: `title`, `date`, `category`. All optional.
+
 ## Requirements
 
-Python 3.11+. No external dependencies.
+Python 3.11+. Install dependencies: `pip install pyyaml`

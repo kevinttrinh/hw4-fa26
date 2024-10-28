@@ -1,4 +1,8 @@
-# Getting Started with Hunch
+---
+title: Getting Started with Hunch
+date: 2024-10-28
+category: setup
+---
 
 Notes on setting up my local knowledge base.
 

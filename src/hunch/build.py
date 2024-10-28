@@ -6,6 +6,8 @@ Usage:
 import pathlib
 import shutil
 
+from hunch.parser import parse_all
+
 NOTES_DIR = pathlib.Path("notes")
 OUTPUT_DIR = pathlib.Path("output")
 
@@ -16,27 +18,25 @@ def build() -> None:
         shutil.rmtree(OUTPUT_DIR)
     OUTPUT_DIR.mkdir(parents=True)
 
-    note_paths = sorted(NOTES_DIR.glob("*.md"))
-    if not note_paths:
+    notes = parse_all(NOTES_DIR)
+    if not notes:
         print("No notes found in notes/")
         return
 
     pages = []
-    for path in note_paths:
-        content = path.read_text(encoding="utf-8")
-        title = path.stem.replace("-", " ").replace("_", " ").title()
-        html = _render_page(title, content)
-        out = OUTPUT_DIR / (path.stem + ".html")
+    for note in notes:
+        html = _render_page(note.metadata.title, note.metadata.category, note.body)
+        out = OUTPUT_DIR / (note.slug + ".html")
         out.write_text(html, encoding="utf-8")
-        pages.append((path.stem, title))
+        pages.append((note.slug, note.metadata.title))
 
     index_html = _render_index(pages)
     (OUTPUT_DIR / "index.html").write_text(index_html, encoding="utf-8")
+    print(f"Built {len(notes)} notes → {OUTPUT_DIR}/")
 
-    print(f"Built {len(note_paths)} notes → {OUTPUT_DIR}/")
 
-
-def _render_page(title: str, body: str) -> str:
+def _render_page(title: str, category: str, body: str) -> str:
+    cat_html = f"<p><em>Category: {category}</em></p>" if category else ""
     return f"""<!DOCTYPE html>
 <html lang="en">
 <head>
@@ -47,6 +47,7 @@ def _render_page(title: str, body: str) -> str:
 <body>
   <nav><a href="index.html">← All notes</a></nav>
   <h1>{title}</h1>
+  {cat_html}
   <pre style="white-space: pre-wrap">{body}</pre>
 </body>
 </html>
