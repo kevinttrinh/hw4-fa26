@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>My Notes — Hunch</title>
+  <style>
+    body { font-family: Georgia, serif; max-width: 720px; margin: 3rem auto; padding: 0 1.5rem; line-height: 1.7; color: #222; }
+    header { margin-bottom: 2rem; border-bottom: 1px solid #eee; padding-bottom: 1rem; }
+    h1 { font-size: 2rem; margin-bottom: 0.25rem; }
+    .tagline { font-family: sans-serif; font-size: 0.9rem; color: #888; }
+    ul { list-style: none; padding: 0; }
+    li { padding: 0.75rem 0; border-bottom: 1px solid #f0f0f0; }
+    li a { font-size: 1.1rem; text-decoration: none; color: #2563eb; }
+    .note-meta { font-family: sans-serif; font-size: 0.8rem; color: #999; margin-top: 0.2rem; }
+    .category { background: #f0f0f0; border-radius: 3px; padding: 0.1rem 0.4rem; }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>My Notes</h1>
+    <p class="tagline">A place for the things I'm still figuring out.</p>
+  </header>
+  <ul>
+    {% for note in notes %}
+    <li>
+      <a href="notes/{{ note.slug }}.html">{{ note.metadata.title }}</a>
+      <div class="note-meta">
+        {% if note.metadata.date %}{{ note.metadata.date }}{% endif %}
+        {% if note.metadata.category %}<span class="category">{{ note.metadata.category }}</span>{% endif %}
+      </div>
+    </li>
+    {% else %}
+    <li>No notes yet.</li>
+    {% endfor %}
+  </ul>
+</body>
+</html>
