@@ -1,7 +1,7 @@
 ---
 title: Coffee Brewing Notes
 date: 2024-10-30
-category: personal
+tags: [personal, coffee]
 ---
 
 Ongoing experiments with pour-over technique.

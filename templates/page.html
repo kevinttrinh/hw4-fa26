@@ -10,7 +10,7 @@
     nav a { color: #555; text-decoration: none; }
     h1 { font-size: 2rem; margin-bottom: 0.25rem; }
     .meta { font-family: sans-serif; font-size: 0.85rem; color: #777; margin-bottom: 2rem; }
-    .category { background: #f0f0f0; border-radius: 3px; padding: 0.1rem 0.4rem; }
+    .tag { background: #f0f0f0; border-radius: 3px; padding: 0.1rem 0.4rem; margin-right: 0.3rem; }
     pre { background: #f6f6f6; padding: 1rem; overflow-x: auto; border-radius: 4px; }
     code { font-size: 0.9rem; }
     a { color: #2563eb; }
@@ -21,9 +21,9 @@
   <h1>{{ note.metadata.title }}</h1>
   <div class="meta">
     {% if note.metadata.date %}<span>{{ note.metadata.date }}</span>{% endif %}
-    {% if note.metadata.category %}
-      <span class="category">{{ note.metadata.category }}</span>
-    {% endif %}
+    {% for tag in note.metadata.tags %}
+      <span class="tag">{{ tag }}</span>
+    {% endfor %}
   </div>
   <article>
     {{ body_html | safe }}

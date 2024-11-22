@@ -2,7 +2,7 @@
 from __future__ import annotations
 
 import re
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from pathlib import Path
 
 import yaml
@@ -12,7 +12,7 @@ import yaml
 class NoteMetadata:
     title: str
     date: str = ""
-    category: str = ""
+    tags: list[str] = field(default_factory=list)
 
 
 @dataclass
@@ -35,10 +35,15 @@ def parse_note(path: Path) -> Note:
     else:
         fm = {}
         body = raw
+
+    tags_raw = fm.get("tags") or fm.get("category") or []
+    if isinstance(tags_raw, str):
+        tags_raw = [tags_raw]
+
     metadata = NoteMetadata(
         title=fm.get("title") or path.stem.replace("-", " ").replace("_", " ").title(),
         date=str(fm.get("date", "")),
-        category=fm.get("category", ""),
+        tags=tags_raw,
     )
     return Note(metadata=metadata, body=body.strip(), slug=path.stem)
 
