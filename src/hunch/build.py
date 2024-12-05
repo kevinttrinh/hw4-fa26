@@ -8,6 +8,7 @@ import shutil
 
 from hunch.parser import parse_all
 from hunch.render import render_index, render_page
+from hunch.search import write_index
 
 NOTES_DIR = pathlib.Path("notes")
 OUTPUT_DIR = pathlib.Path("output")
@@ -32,6 +33,8 @@ def build() -> None:
 
     index_html = render_index(notes)
     (OUTPUT_DIR / "index.html").write_text(index_html, encoding="utf-8")
+
+    write_index(notes, OUTPUT_DIR)
     print(f"Built {len(notes)} notes → {OUTPUT_DIR}/")
 
 
