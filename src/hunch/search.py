@@ -6,8 +6,6 @@ from pathlib import Path
 
 from hunch.parser import Note
 
-SEARCH_INDEX_PATH = Path("output") / "search.json"
-
 
 def build_index(notes: list[Note]) -> list[dict]:
     """Return a list of index entries suitable for client-side search."""

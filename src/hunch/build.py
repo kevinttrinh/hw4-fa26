@@ -11,15 +11,15 @@ from hunch.render import render_index, render_page
 from hunch.search import write_index
 
 NOTES_DIR = pathlib.Path("notes")
-OUTPUT_DIR = pathlib.Path("output")
+SITE_DIR = pathlib.Path("site")
 
 
 def build() -> None:
-    """Render all notes in NOTES_DIR to HTML in OUTPUT_DIR."""
-    if OUTPUT_DIR.exists():
-        shutil.rmtree(OUTPUT_DIR)
+    """Render all notes in SITE_DIR to HTML."""
+    if SITE_DIR.exists():
+        shutil.rmtree(SITE_DIR)
 
-    notes_out = OUTPUT_DIR / "notes"
+    notes_out = SITE_DIR / "notes"
     notes_out.mkdir(parents=True)
 
     notes = parse_all(NOTES_DIR)
@@ -32,10 +32,10 @@ def build() -> None:
         (notes_out / f"{note.slug}.html").write_text(html, encoding="utf-8")
 
     index_html = render_index(notes)
-    (OUTPUT_DIR / "index.html").write_text(index_html, encoding="utf-8")
+    (SITE_DIR / "index.html").write_text(index_html, encoding="utf-8")
 
-    write_index(notes, OUTPUT_DIR)
-    print(f"Built {len(notes)} notes → {OUTPUT_DIR}/")
+    write_index(notes, SITE_DIR)
+    print(f"Built {len(notes)} notes → {SITE_DIR}/")
 
 
 if __name__ == "__main__":
