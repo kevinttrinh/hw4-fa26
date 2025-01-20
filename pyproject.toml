@@ -4,18 +4,35 @@ build-backend = "hatchling.build"
 
 [project]
 name = "hunch"
-version = "0.3.0"
+version = "0.4.0"
 description = "A lightweight personal notes publisher"
 readme = "README.md"
 requires-python = ">=3.11"
 dependencies = [
+    "click>=8.1",
     "jinja2>=3.1",
     "markdown>=3.7",
     "pyyaml>=6.0",
 ]
 
+[project.scripts]
+hunch = "hunch.build:cli"
+
 [tool.hatch.build.targets.wheel]
 packages = ["src/hunch"]
+
+[dependency-groups]
+dev = [
+    "ruff>=0.4",
+    "taskipy>=1.14.1",
+]
+
+[tool.taskipy.tasks]
+build   = "hunch build"
+check   = "hunch check"
+index   = "hunch index"
+lint    = "ruff check src/"
+doctest = "python -m doctest src/hunch/parser.py"
 
 [tool.ruff.lint]
 select = ["E", "F", "I", "UP"]

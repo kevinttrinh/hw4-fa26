@@ -1,4 +1,4 @@
-"""Parse Markdown notes with optional YAML frontmatter."""
+"""Parse Markdown notes with YAML frontmatter."""
 from __future__ import annotations
 
 import re
@@ -29,6 +29,7 @@ def parse_note(path: Path) -> Note:
     """Parse a single Markdown note file, returning a Note object."""
     raw = path.read_text(encoding="utf-8")
     m = _FRONTMATTER_RE.match(raw)
+
     if m:
         fm = yaml.safe_load(m.group(1)) or {}
         body = raw[m.end():]
@@ -40,11 +41,15 @@ def parse_note(path: Path) -> Note:
     if isinstance(tags_raw, str):
         tags_raw = [tags_raw]
 
+    author = fm.get("author", "")
+
     metadata = NoteMetadata(
         title=fm.get("title") or path.stem.replace("-", " ").replace("_", " ").title(),
         date=str(fm.get("date", "")),
         tags=tags_raw,
     )
+    metadata.author = author  # type: ignore[attr-defined]
+
     return Note(metadata=metadata, body=body.strip(), slug=path.stem)
 
 

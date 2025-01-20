@@ -2,6 +2,7 @@
 title: Getting Started with Hunch
 date: 2024-10-28
 tags: [setup, meta]
+author: Alex
 ---
 
 Notes on setting up my local knowledge base.
