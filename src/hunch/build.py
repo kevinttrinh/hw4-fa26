@@ -28,7 +28,8 @@ def cli() -> None:
 
 @cli.command()
 @click.option("--clean", is_flag=True, default=False, help="Remove site/ before building.")  # noqa: E501
-def build(clean: bool) -> None:
+@click.option("--drafts", is_flag=True, default=False, help="Include notes marked draft: true.")  # noqa: E501
+def build(clean: bool, drafts: bool) -> None:
     """Build all notes into a static site."""
     if clean and SITE_DIR.exists():
         shutil.rmtree(SITE_DIR)
@@ -37,6 +38,8 @@ def build(clean: bool) -> None:
     notes_out.mkdir(parents=True, exist_ok=True)
 
     notes = parse_all(NOTES_DIR)
+    if not drafts:
+        notes = [n for n in notes if not getattr(n.metadata, "draft", False)]
 
     for note in notes:
         html = render_page(note)

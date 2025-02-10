@@ -1,4 +1,33 @@
-"""Parse Markdown notes with YAML frontmatter."""
+"""Parse Markdown notes with YAML frontmatter.
+
+Each note file is a Markdown file with an optional YAML frontmatter block.
+Supported frontmatter fields:
+
+  title    : str   — display title (defaults to filename stem)
+  date     : str   — ISO date string, e.g. 2024-11-15
+  category : str   — single tag/category label
+  author   : str   — note author
+
+Example note file::
+
+    ---
+    title: My First Note
+    date: 2024-10-15
+    category: python
+    author: Alex
+    ---
+
+    Note body goes here.
+
+Typical usage::
+
+    >>> from pathlib import Path
+    >>> note = parse_note(Path('notes/python-decorators.md'))
+    >>> note.metadata.title
+    'Python Decorators'
+    >>> note.metadata.tags
+    ['python']
+"""
 from __future__ import annotations
 
 import re
