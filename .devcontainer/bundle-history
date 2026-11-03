@@ -1,0 +1,51 @@
+#!/usr/bin/env bash
+# Saves your commit history to hw4.bundle, commits that file, and pushes.
+# Gradescope's copy of your repository leaves out the history, so the bundle
+# is how it reaches course staff. Run it as your last step, after committing.
+set -euo pipefail
+
+bundle=hw4.bundle
+
+die() {
+    echo "bundle-history: $1" >&2
+    exit 1
+}
+
+root=$(git rev-parse --show-toplevel 2>/dev/null) || die "run this inside your HW4 repository."
+cd "$root"
+
+[[ "$(git branch --show-current)" == main ]] || die "switch to your main branch first."
+
+origin=$(git remote get-url origin 2>/dev/null) || die "no remote named origin. See \"Getting your repository\" in README.md."
+[[ "$origin" != *brandeis-cosi-106b/hw4-fa26* ]] \
+    || die "origin is the course repository, not yours. See \"Getting your repository\" in README.md."
+
+changes=$(git status --porcelain -- . ":(exclude)$bundle")
+if [[ -n "$changes" ]]; then
+    echo "$changes" >&2
+    die "commit your changes first, so the bundle includes them. Nothing was changed."
+fi
+
+# If the latest commit only added the bundle and nothing has changed since, it's current.
+if [[ "$(git diff-tree --root --no-commit-id --name-only -r HEAD)" == "$bundle" ]] \
+    && [[ -z "$(git status --porcelain -- "$bundle")" ]]; then
+    echo "$bundle already covers your latest commit."
+else
+    git bundle create -q "$bundle" HEAD main
+    git bundle verify -q "$bundle" >/dev/null 2>&1 || die "the bundle failed verification. Nothing was committed."
+    git add -- "$bundle"
+    git commit -q -m "Add history bundle" -- "$bundle"
+    echo "Saved and committed $bundle."
+fi
+
+git push -q origin main || die "the push failed, so GitHub doesn't have your bundle yet. Fix the error above and run this again."
+
+if git rev-parse -q --verify upstream/main >/dev/null; then
+    count=$(git rev-list --count --invert-grep --grep='^Add history bundle$' upstream/main..HEAD)
+    echo "Your commits beyond the starter code: $count"
+    if [[ "$count" -lt 5 ]]; then
+        echo "ARTIFACT.md asks for at least 5."
+    fi
+fi
+echo "Pushed. Now submit your main branch to HW4 Artifact on Gradescope."
+echo "If you commit anything else, run bundle-history again before resubmitting."
