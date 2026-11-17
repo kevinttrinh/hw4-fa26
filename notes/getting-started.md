@@ -17,10 +17,10 @@ Also, I want my notes to be plain text files I control.
 
 ## Setup
 
-Clone the repo and run the build script:
+Clone the repo and build the site:
 
-    python -m hunch.build
+    hunch build
 
-Open `output/index.html` in a browser.
+Open `site/index.html` in a browser.
 
 That's it. No accounts, no syncing, no block editors.
