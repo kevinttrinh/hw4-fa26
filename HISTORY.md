@@ -120,7 +120,7 @@ it is wrong.
 | Running Hunch | `hunch build`, `hunch check`, `hunch index` (not `python -m hunch.build`) |
 | Output directory | `site/` (git-ignored; never commit it) |
 | Labels | `tags:` as a YAML list, e.g. `tags: [python, tools]`. A single string also works. |
-| `category:` | Legacy. Still read silently as a fallback for `tags:`, so don't use it in new notes |
+| `category:` | Deprecated (v0.5.0). Still read as `tags:`, but `hunch build` and `hunch check` now warn and show the fix; see the migration section in `docs/USAGE.md` |
 | Other fields | `title` (defaults to the filename), `date` (`YYYY-MM-DD`, sorts the index), `author` (stored but not yet shown on pages) |
 | Drafts | `draft: true` is **not** honored yet; see drift item 5 |
 | Search | `hunch build` always writes `site/search.json`; `hunch index` only regenerates it |

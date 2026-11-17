@@ -9,6 +9,31 @@ small features or fixes.
 
 ---
 
+## v0.5.0 — 2026-11-16
+
+### Deprecated
+- **`category:` is deprecated in favor of `tags:`.** Since v0.3.1 Hunch has
+  read `category:` silently as a stand-in for `tags:`, so there was no way to
+  learn your notes used the old format. Now:
+  - `hunch build` still builds every note, then lists each note that uses
+    `category:` with the exact line to change.
+  - `hunch check` reports each one as a `DEPRECATED` issue.
+  - If a note has both fields, you're told that `category:` is being ignored.
+
+  Nothing fails and your site output is unchanged. A future version may stop
+  reading `category:`. **To migrate**, see "Migrating from `category:` to
+  `tags:`" in `docs/USAGE.md` (usually a one-line edit per note).
+
+### Documentation
+- `docs/USAGE.md` and `docs/CONTRIBUTING.md` brought up to date: `site/` (not
+  `output/`), `tags:` and `author:`, the `hunch` command, `--clean`, and what
+  `hunch check` really reports. Added a Known issues section (`draft: true` is
+  not yet honored).
+- New `HISTORY.md` explains how the project evolved, for new contributors.
+- Sample notes and the `parser.py` doctest now use `tags:`.
+
+---
+
 ## v0.4.1 — 2025-02-10
 
 ### Added

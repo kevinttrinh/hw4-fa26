@@ -9,7 +9,8 @@ Supported frontmatter fields:
   author : str        — note author
 
 ``category:`` (a single string) is the pre-0.3.1 name for ``tags:``. It is
-still read as a fallback so old notes build, but new notes should not use it.
+deprecated: still read as a fallback so old notes build, but recorded in
+``metadata.deprecated_fields`` so ``hunch build`` and ``hunch check`` warn.
 
 Example note file::
 
@@ -47,6 +48,9 @@ class NoteMetadata:
     title: str
     date: str = ""
     tags: list[str] = field(default_factory=list)
+    # Deprecated frontmatter keys found in the note, mapped to their raw values.
+    # The parser only records them; the CLI decides how to report them.
+    deprecated_fields: dict[str, object] = field(default_factory=dict)
 
 
 @dataclass
@@ -71,6 +75,15 @@ def parse_note(path: Path) -> Note:
         fm = {}
         body = raw
 
+    # `category:` was replaced by `tags:` in v0.3.1 and deprecated in v0.5.0.
+    # It is still read as a fallback so old notes keep building, but we record
+    # its presence so `hunch build` and `hunch check` can tell the user.
+    deprecated: dict[str, object] = {}
+    if "category" in fm:
+        # If `tags:` is also present it wins, and `category:` is ignored.
+        key = "category_ignored" if fm.get("tags") else "category"
+        deprecated[key] = fm["category"]
+
     tags_raw = fm.get("tags") or fm.get("category") or []
     if isinstance(tags_raw, str):
         tags_raw = [tags_raw]
@@ -81,6 +94,7 @@ def parse_note(path: Path) -> Note:
         title=fm.get("title") or path.stem.replace("-", " ").replace("_", " ").title(),
         date=str(fm.get("date", "")),
         tags=tags_raw,
+        deprecated_fields=deprecated,
     )
     metadata.author = author  # type: ignore[attr-defined]
 

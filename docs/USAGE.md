@@ -81,6 +81,9 @@ Scans every note and prints a `WARN` line for each one that has:
 - no `date`
 - no `tags`
 
+It also prints a `DEPRECATED` line for every note that still uses the old
+`category:` field (see [Migrating from category: to tags:](#migrating-from-category-to-tags)).
+
 When everything is fine it prints `All N note(s) look good.`; otherwise it
 prints the warnings and a count, e.g. `2 issue(s) found.` (A missing `title`
 is never reported, because Hunch always falls back to the filename.)
@@ -117,7 +120,8 @@ All fields are optional. A bare Markdown file with no frontmatter still
 builds, though `hunch check` will warn that it has no date and no tags.
 
 > **Older notes:** before v0.3.1 Hunch used a single `category:` field instead of
-> `tags:`. It's still read for compatibility, but new notes should use `tags:`.
+> `tags:`. `category:` is **deprecated**: it still works, but Hunch warns about
+> it. See [Migrating from category: to tags:](#migrating-from-category-to-tags).
 
 ## Output structure
 
@@ -144,6 +148,82 @@ site/         generated site (do not edit by hand)
 src/hunch/    the Hunch source code
 docs/         this guide and the contributor guide
 ```
+
+## Migrating from `category:` to `tags:`
+
+**Who this is for:** you've been using Hunch since before v0.3.1, or you
+copied an old example, and `hunch build` or `hunch check` has started
+mentioning `category:`. Your site is fine. Nothing is broken and nothing was
+lost.
+
+### What changed
+
+Early versions of Hunch gave each note one label:
+
+```yaml
+category: python
+```
+
+In v0.3.1 (November 2024) this became `tags:`, a list, so a note can have
+several labels. Hunch kept reading `category:` silently so old notes wouldn't
+break. As of v0.5.0, `category:` is **deprecated**: it still works exactly as
+before, but Hunch now tells you about it, because a future version may stop
+reading it.
+
+### What you'll see
+
+`hunch build` finishes the build as usual, then adds a note at the end:
+
+```
+Built 1 note(s) → site/
+
+Heads up: 1 note uses `category:`, which is deprecated.
+Hunch replaced `category:` with `tags:` in v0.3.1. This note still built normally,
+but `category:` may stop working in a future version. To update:
+  notes/python-decorators.md: change `category: python` to `tags: [python]`
+More details: docs/USAGE.md, section "Migrating from category: to tags:"
+```
+
+`hunch check` lists the same notes, and counts them as issues:
+
+```
+  DEPRECATED  notes/python-decorators.md: change `category: python` to `tags: [python]`
+1 issue(s) found.
+`category:` was replaced by `tags:`. See docs/USAGE.md, section "Migrating from category: to tags:"
+```
+
+Neither command fails or changes your files. The build still succeeds, and
+your pages still show the label.
+
+### What to do
+
+For each file listed, open it and change the frontmatter line exactly as the
+message says:
+
+```diff
+ ---
+ title: Python Decorators
+ date: 2024-11-03
+-category: python
++tags: [python]
+ ---
+```
+
+Notice the square brackets: `tags:` is a list, so you can now add more labels,
+e.g. `tags: [python, decorators]`.
+
+**If a note has both `tags:` and `category:`,** Hunch has been using only
+`tags:` and ignoring `category:` all along. The message will say so. Delete the
+`category:` line, or move its value into `tags:` if you want to keep that label.
+
+To find every affected note yourself:
+
+```
+grep -l '^category:' notes/*.md
+```
+
+Run `hunch check` afterwards. When it says `All N note(s) look good.` you're
+done.
 
 ## Known issues
 
