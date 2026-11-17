@@ -1,7 +1,8 @@
 ---
 title: Python Decorators
 date: 2024-11-03
-category: python
+tags: [python]
+author: Alex
 ---
 
 A hunch I've been developing: decorators are underused for cross-cutting concerns.

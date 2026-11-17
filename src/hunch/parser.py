@@ -3,23 +3,26 @@
 Each note file is a Markdown file with an optional YAML frontmatter block.
 Supported frontmatter fields:
 
-  title    : str   — display title (defaults to filename stem)
-  date     : str   — ISO date string, e.g. 2024-11-15
-  category : str   — single tag/category label
-  author   : str   — note author
+  title  : str        — display title (defaults to the filename, title-cased)
+  date   : str        — ISO date string, e.g. 2024-11-15; sorts the index
+  tags   : list[str]  — labels for the note; a single string becomes [string]
+  author : str        — note author
+
+``category:`` (a single string) is the pre-0.3.1 name for ``tags:``. It is
+still read as a fallback so old notes build, but new notes should not use it.
 
 Example note file::
 
     ---
     title: My First Note
     date: 2024-10-15
-    category: python
+    tags: [python, tools]
     author: Alex
     ---
 
     Note body goes here.
 
-Typical usage::
+Typical usage (run from the repository root, since the path is relative)::
 
     >>> from pathlib import Path
     >>> note = parse_note(Path('notes/python-decorators.md'))
@@ -27,6 +30,8 @@ Typical usage::
     'Python Decorators'
     >>> note.metadata.tags
     ['python']
+    >>> note.metadata.author
+    'Alex'
 """
 from __future__ import annotations
 
