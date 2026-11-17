@@ -78,9 +78,15 @@ must have been force-added (`git add -f`) past that rule. The removal in
 USAGE.md says `hunch check` warns about missing `title`, `date`, or
 `category`. The code checks `title`, `date`, and **`tags`**. The `title` check
 can't actually fire, because the parser always fills in a title from the
-filename. CONTRIBUTING.md still says to build with `python -m hunch.build` (now
-replaced by `hunch build`) and to update "the frontmatter table in
-`README.md`", which no longer exists.
+filename. CONTRIBUTING.md still says to build with `python -m hunch.build`, but the CLI
+commit removed that entry point's `if __name__ == "__main__"` block. The
+command now **exits silently and builds nothing**, so a contributor following
+the guide would see no error and no output. It also says to update "the
+frontmatter table in `README.md`", which no longer exists.
+
+The same commit quietly changed one behavior: earlier builds always deleted
+the output folder first, but `hunch build` only does that with `--clean`.
+Nothing documented the change.
 
 ### 4. A docstring that teaches the old convention and passes its own test (`019471e`)
 The new module docstring in `parser.py` lists `category : str` as a field and
